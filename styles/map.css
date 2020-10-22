@@ -1,0 +1,15 @@
+#map-container {
+    margin: 0;
+    /* width: 99vw; */
+    height: 50vh;
+    background-color: royalblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#map-container #map {
+    width: 65vw;
+    height: 48vh;
+    background-color: #000;
+}

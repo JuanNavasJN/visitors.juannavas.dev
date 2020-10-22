@@ -1,65 +1,141 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { useState, useEffect } from "react";
+import Head from "next/head";
+import DataTable, { createTheme } from "react-data-table-component";
+import axios from "axios";
+import Map from "../components/Map";
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+const columns = [
+    {
+        name: "IP",
+        selector: "ip",
+        sortable: true,
+    },
+    {
+        name: "Country",
+        selector: "country",
+        sortable: true,
+    },
+    {
+        name: "City",
+        selector: "city",
+        sortable: true,
+    },
+    {
+        name: "Site",
+        selector: "from",
+        sortable: true,
+    },
+    {
+        name: "Browser",
+        selector: "browser",
+        sortable: true,
+    },
+    {
+        name: "ISP",
+        selector: "isp",
+        sortable: true,
+    },
+    {
+        name: "Date",
+        selector: "createdAt",
+        sortable: true,
+        grow: 2,
+    },
+    {
+        name: "Device",
+        selector: "device",
+        sortable: true,
+        grow: 3,
+    },
+];
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+createTheme("dark0", {
+    text: {
+        primary: "#f2f2f2",
+        secondary: "#ccc",
+    },
+    background: {
+        // default: "#002b36",
+        default: "#000",
+    },
+    context: {
+        background: "#cb4b16",
+        text: "#FFFFFF",
+    },
+    divider: {
+        default: "#073642",
+    },
+    action: {
+        button: "rgba(0,0,0,.54)",
+        hover: "rgba(0,0,0,.08)",
+        disabled: "rgba(0,0,0,.12)",
+    },
+});
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+const Home = ({ visitors }) => {
+    const [data, setData] = useState(visitors);
+    const [search, setSearch] = useState("");
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+    const onSearch = e => {
+        const { value } = e.target;
+        setSearch(value);
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+        if (value === "") {
+            return setData(visitors);
+        }
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+        const regex = new RegExp(value, "i");
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        const filtered = visitors.filter(v => {
+            for (let key in v) {
+                if (key === "useragent") continue;
+                if (regex.test(v[key])) return true;
+            }
+            return false;
+        });
+
+        setData(filtered);
+    };
+
+    // console.log("visitors", visitors);
+    return (
+        <div>
+            <Head>
+                <title>Visitors</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+
+            <main>
+                <Map />
+                <div className="search-container">
+                    <input
+                        placeholder="Search"
+                        id="search"
+                        value={search}
+                        onChange={onSearch}
+                    />
+                </div>
+                <DataTable
+                    noHeader={true}
+                    data={data}
+                    columns={columns}
+                    theme={"dark0"}
+                    // customStyles={customStyles}
+                    pagination={true}
+                />
+            </main>
         </div>
-      </main>
+    );
+};
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
-}
+Home.getInitialProps = async function () {
+    const url = "https://back.juannavas.dev/visitors";
+
+    const visitors = (await axios.get(url)).data;
+
+    return {
+        visitors,
+    };
+};
+
+export default Home;
