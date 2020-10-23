@@ -13,6 +13,8 @@
     "react": "16.14.0",
     "react-data-table-component": "^6.11.5",
     "react-dom": "16.14.0",
+    "react-leaflet-universal": "^2.2.1",
+    "react-map-gl": "^5.2.9",
     "styled-components": "^5.2.0"
   }
 }

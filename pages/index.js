@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import DataTable, { createTheme } from "react-data-table-component";
 import axios from "axios";
-import Map from "../components/Map";
+// import Map from "../components/Map";
+import dynamic from "next/dynamic";
+
+const MapWithNoSSR = dynamic(() => import("../components/Map"), {
+    ssr: false,
+});
 
 const columns = [
     {
@@ -103,10 +108,14 @@ const Home = ({ visitors }) => {
             <Head>
                 <title>Visitors</title>
                 <link rel="icon" href="/favicon.ico" />
+                <link
+                    href="https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css"
+                    rel="stylesheet"
+                />
             </Head>
 
             <main>
-                <Map />
+                <MapWithNoSSR />
                 <div className="search-container">
                     <input
                         placeholder="Search"
