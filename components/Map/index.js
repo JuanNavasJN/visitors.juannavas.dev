@@ -14,6 +14,31 @@ const apiKey =
 export default function Map({ data }) {
     const [cities, setCities] = useState([]);
 
+    const [state, setState] = useState({
+        viewport: {
+            width: "75vw",
+            height: "58vh",
+            // latitude: 48.138414, // munich
+            // longitude: 11.579828,
+            // latitude: 10.486258, // caracas
+            // longitude: -66.893736,
+            zoom: 1,
+        },
+    });
+
+    useEffect(_ => {
+        if (window.innerWidth < 800) {
+            setState({
+                ...state,
+                viewport: {
+                    width: "100vw",
+                    height: "58vh",
+                    zoom: 0,
+                },
+            });
+        }
+    }, []);
+
     useEffect(
         _ => {
             let filtered = data.filter(
@@ -31,18 +56,6 @@ export default function Map({ data }) {
         },
         [data]
     );
-
-    const [state, setState] = useState({
-        viewport: {
-            width: "75vw",
-            height: "58vh",
-            // latitude: 48.138414, // munich
-            // longitude: 11.579828,
-            // latitude: 10.486258, // caracas
-            // longitude: -66.893736,
-            zoom: 1,
-        },
-    });
 
     return (
         <div id="map-container">
