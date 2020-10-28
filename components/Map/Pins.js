@@ -24,7 +24,11 @@ export default function Pins({ data, onlClick }) {
                     stroke: "none",
                     transform: `translate(${-SIZE / 2}px,${-SIZE}px)`,
                 }}
-                onClick={() => onClick(city)}
+                onClick={() =>
+                    alert(
+                        `${city.name}, ${city.country}\n\nLat: ${city.latitude}, Lon: ${city.longitude}`
+                    )
+                }
             >
                 <path d={ICON} />
             </svg>

@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Head from "next/head";
 import DataTable, { createTheme } from "react-data-table-component";
 import axios from "axios";
-// import Map from "../components/Map";
 import dynamic from "next/dynamic";
 
 const MapWithNoSSR = dynamic(() => import("../components/Map"), {
@@ -60,7 +59,6 @@ createTheme("dark0", {
         secondary: "#ccc",
     },
     background: {
-        // default: "#002b36",
         default: "#000",
     },
     context: {
@@ -102,7 +100,6 @@ const Home = ({ visitors }) => {
         setData(filtered);
     };
 
-    // console.log("visitors", visitors);
     return (
         <div>
             <Head>
@@ -115,7 +112,7 @@ const Home = ({ visitors }) => {
             </Head>
 
             <main>
-                <MapWithNoSSR />
+                <MapWithNoSSR data={data} />
                 <div className="search-container">
                     <input
                         placeholder="Search"
@@ -129,8 +126,8 @@ const Home = ({ visitors }) => {
                     data={data}
                     columns={columns}
                     theme={"dark0"}
-                    // customStyles={customStyles}
                     pagination={true}
+                    onRowClicked={data => console.log(data)}
                 />
             </main>
         </div>

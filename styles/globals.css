@@ -23,7 +23,7 @@ a {
 .search-container {
     display: flex;
     justify-content: flex-end;
-    padding: 20px 10px 20px 0px;
+    padding: 40px 30px 20px 0px;
 }
 
 .search-container #search {
